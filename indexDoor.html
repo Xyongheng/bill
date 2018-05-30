@@ -559,7 +559,7 @@
 								<div v-for="item in dayData" class="moneyList">
 									<div class="title clear">
 										<div class="time fl clear"><i class="fl"></i><span>{{item.dateTime}}</span><span>{{item.week}}</span></div>
-										<div class="moneyTip fr">收入：{{item.sumMoneyIn}}   支出：{{item.sumMoneyOut}}</div>
+										<div class="moneyTip fr">收入：{{item.sumMoneyIn | moneyFormat}}   支出：{{item.sumMoneyOut | moneyFormat}}</div>
 									</div>
 									<div v-for="detail in item.dayDetail" class="detailList">
 										<div class="info fl clear">
@@ -965,6 +965,22 @@
           		}
           	]
 	    },
+	    filters: {
+		  moneyFormat: function (money) {
+		    if(money == 0){
+	            return money+".00";
+	        }else{
+	            var n = 2;
+	            money = parseFloat((money + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+	            var l = money.split(".")[0].split("").reverse(), r = money.split(".")[1];
+	            var t = "";
+	            for (var i = 0; i < l.length; i++) {
+	            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "" : "");
+	            }
+	            return  t.split("").reverse().join("") + "." + r;
+	        }
+		  }
+		},
 	    methods:{
 	    	toAppUrl(){
 	    		window.location.href = 'record.html'
@@ -1011,6 +1027,10 @@
 	    			}
 	    			this.dayData[i].sumMoneyIn = sumMoneyIn;
 	    			this.dayData[i].sumMoneyOut = sumMoneyOut;
+	    			localStorage.setItem("dayData",JSON.stringify(this.dayData));
+	    			if(localStorage.getItem('dayData')){
+						this.dayData = JSON.parse(localStorage.getItem('dayData'));
+					}
 	    		}
 	    	},
 	    	//staticics方法
@@ -1159,9 +1179,7 @@
 	    	}
 	    },
 	    created(){
-			if(localStorage.getItem('dayData')){
-				this.dayData = JSON.parse(localStorage.getItem('dayData'));
-			}
+			
 			//index方法
 			this.getEveryInOut()
 			//statistics代码
