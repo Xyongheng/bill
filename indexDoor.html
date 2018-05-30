@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<title>首页</title>
+	<script src="js/vue.js"></script>
+	<script src="js/highcharts.js"></script>
+    <script src="js/exporting.js"></script>	
+</head>
+<link rel="stylesheet" type="text/css" href="css/public.css">
+<style type="text/css">
+	#doorData{
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		font-family: PingFangSC-Medium;
+	}
+	html,body{
+		height: 100%;
+	}
+	.doorConBox{
+		width: 10.0rem;
+		position: relative;
+		overflow: hidden;
+		/* height: 800px; */
+		overflow-y: auto;
+	}
+	.contents{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 20.0rem;
+		/* height: 800px; */
+	}
+	.doorConBox .leftContents{
+		top: 0;
+		left: 0;
+		transition: all 0.4s;
+	}
+	.doorConBox .rightContents{
+		top: 0;
+		left: -10rem;
+		transition: all 0.4s;
+	}
+	iframe{
+		width: 10rem;
+		/* float: left; */
+	}
+	.btns{
+		height: 1.333333rem;
+		width: 10.0rem;
+		position: fixed;
+		bottom: 0;
+		border-top: 1px solid #E2E2E2;
+		background: #fff;
+	}
+	.btns .btn{
+		width: 4.986667rem;
+		height: 100%;
+		padding-top: 0.24rem;
+	}
+	.btns .btn img{
+		height: 0.8rem;
+		width: 0.96rem;
+		display: block;
+		margin: 0 auto;
+	}
+	.jia{
+		height: 1.6rem;
+		width: 1.6rem;
+		position: fixed;
+		bottom: 1.866667rem;
+		right: 0.586667rem;
+		background: url('imgs/jiahao.png') no-repeat;
+		background-size: 100% 100%;
+	}
+	.message{
+		height: 1rem;
+		width: 1.2rem;
+		position: absolute;
+		top: 0.7rem;
+		right: 0;
+	}
+	.toBtn{
+		position: absolute;
+		top:13.466667rem;
+		left: 3.12rem;
+		width: 3.733333rem;
+		height: 1.066667rem;
+		border-radius: 0.106667rem;
+		line-height: 1.066667rem;
+		text-align: center;
+		color: #fff;
+	}
+	[v-cloak] {
+	  display: none;
+	}
+	.leftIframe,.rightIframe{
+		width: 10rem;
+		float: left;
+	}
+</style>
+<style type="text/css">
+	#IndexData {
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		font-family: PingFangSC-Medium;
+		overflow-y: auto;
+	}
+	#IndexData  header{
+		height: 5.013333rem;
+		background: url('imgs/indexHeader.png') no-repeat;
+		background-size: 100%  100%;
+		color: #fff;
+		text-align: center;
+	}
+	#IndexData header .top{
+		font-size: 0.426667rem;
+		text-align: center;
+		position: relative;
+		padding-top: 0.826667rem;
+		margin-bottom: 0.853333rem;
+		line-height: 0.666667rem;
+	}
+	#IndexData header .top .tips{
+		position: absolute;
+		right: 0.533333rem;
+		bottom: 0;
+		height: 0.533333rem;
+		width: 0.533333rem;
+		background: url('imgs/bell.png') no-repeat;
+		background-size: 100% 100%;
+	}
+	#IndexData header .sum{
+		font-size: 0.96rem;
+		line-height: 0.96rem;
+		/*padding-top: 2.613333rem;*/
+		padding-bottom: 0.266667rem;
+	}
+	#IndexData .money{
+		height: 2.266667rem;
+		background: #fff;
+
+	}
+	#IndexData .money .fl{width: 4.94rem;text-align: center;}
+	#IndexData .money .line{
+		float: left;
+		width: 1px;
+		height: 1.2rem;
+		margin-top: 0.533333rem;
+		border-left: 1px dashed #A0A0A0;
+		position: relative;
+	}
+	#IndexData .money .fl .num{
+		font-size: 0.533333rem;
+		line-height: 0.533333rem;
+		color: #303030;
+		padding: 0.533333rem 0 0.16rem;
+		font-family: PingFangSC-Regular;
+	}
+	#IndexData .money .fl .text{
+		font-size: 0.32rem;
+		line-height: 0.32rem;
+		color: #A0A0A0;
+		font-family: PingFangSC-Light;
+	}
+	#IndexData .moneyList{
+		/*height: 100%;*/
+		/* overflow-y: auto; */
+	}
+	#IndexData .moneyList .title{
+		height: 1.253333rem;
+	}
+	#IndexData .moneyList .title .time{
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		/* padding: 0.533333rem 0 0; */
+	}
+	#IndexData .moneyList .title .time i{
+		display: inline-block;
+		height: 0.266667rem;
+		width: 0.266667rem;
+		background: #008BFF;
+		margin: 0.586667rem 0.266667rem 0;
+		border-radius: 50%;
+	}
+	#IndexData .moneyList .title .time span{
+		float: left;
+		display: inline-block;
+		color: #4C4C4C;
+		padding-right: 0.293333rem;
+		padding-top: 0.533333rem;
+		font-family: PingFangSC-Regular;
+	}
+	#IndexData .moneyList .title .moneyTip{
+		padding: 0.586667rem 0.533333rem 0 0;
+		color: #4C4C4C;
+		font-size: 0.32rem;
+	}
+	#IndexData .moneyList .detailList{
+		height: 1.866667rem;
+		width: 9.466667rem;
+		background: #fff;
+		margin: 0 0.133333rem 0.133333rem;
+	}
+	/* .moneyList .detailList:last-child{
+		margin: 0 0.133333rem 0;
+	} */
+	#IndexData .moneyList .detailList .info .imgs{
+		height: 0.8rem;
+		width: 0.8rem;
+		margin: 0.533333rem 0.266667rem 0 0.533333rem;
+	}
+	#IndexData .moneyList .detailList .info .name{
+		font-size: 0.426667rem;
+		line-height: 0.426667rem;
+		color: #4C4C4C;
+		padding-top: 0.693333rem;
+		font-family: PingFangSC-Regular;
+	}
+	#IndexData .moneyList .detailList .moneyNum{
+		font-size: 0.533333rem;
+		line-height: 0.533333rem;
+		color: #4C4C4C;
+		padding-top: 0.666667rem;
+		padding-right: 0.56rem;
+		font-family: PingFangSC-Medium;
+	}
+	#IndexData .null{padding-top: 1.333333rem}
+	#IndexData .null .imgs{
+		height: 2.4rem;
+		width: 3.2rem;
+		display: block;
+		margin: 0 auto;
+	}
+	#IndexData .null .btn{
+		width: 3.733333rem;
+		height: 1.066667rem;
+		border-radius: 0.106667rem;
+		margin: 0 auto;
+		background: #008BFF;
+		line-height: 1.066667rem;
+		text-align: center;
+		color: #fff;
+	}
+	#IndexData .null p.text{
+		font-size: 0.426667rem;
+		line-height: 0.586667rem;
+		padding: 0.8rem 0 1.066667rem;
+		color: #A0A0A0;
+		text-align: center;
+	}
+	#IndexData .listSum{
+		height: 100%;
+		overflow-y: auto;
+	}
+	[v-cloak] {
+	  display: none;
+	}
+</style>
+<style type="text/css">
+	#statistics{font-family: PingFangSC-Medium;overflow: hidden;}
+	#statistics .statisticsBox{
+		height: 100%;
+		overflow-y: auto;
+	}
+	#statistics .top{
+		font-size: 0.48rem;
+		text-align: center;
+		position: relative;
+		color: #fff;
+		line-height: 0.666667rem;
+		background: #008BFF;
+		height: 1.733333rem;
+		padding-top: 0.826667rem;
+		position: fixed;
+		top: 0;
+		left: 10rem;
+		width: 10rem;
+		z-index: 999;
+		transition: all 0.4s;
+	}
+	#statistics .topRight{
+		left: 0;
+		transition: all 0.4s;
+	}
+	#statistics .topTi{
+		height: 1.733333rem
+	}
+	#statistics .top .tips{
+		position: absolute;
+		right: 0.533333rem;
+		bottom: 0.293333rem;
+		height: 0.533333rem;
+		width: 0.533333rem;
+		background: url('imgs/bell.png') no-repeat;
+		background-size: 100% 100%;
+	}
+	#statistics .bill{
+		height: 3.733333rem;
+		padding-left: 0.533333rem;
+		background: #fff;
+		margin-bottom: 0.266667rem;
+	}
+	#statistics .bill .bill_top{
+		line-height: 1.52rem;
+		height: 1.52rem;
+	}
+	#statistics .bill .text{
+		font-size: 0.426667rem;color: #9B9B9B;
+	}
+	#statistics .bill .month{
+		position: relative;
+		padding-right: 0.4rem;font-size: 0.533333rem;color: #4C4C4C;font-family: PingFangSC-Medium;
+	}
+	#statistics .bill .month img{
+		display: inline-block;height: 0.4rem;width: 0.4rem;margin-left: 0.24rem;
+	}
+	#statistics .bill .line{
+		height: 1px;width: 100%;background: #EFEFEF
+	}
+	#statistics .bill .bill_bottom .surplus{width: 2.8rem;}
+	#statistics .bill .bill_bottom .moneyIn{width: 3.333333rem;padding-left: 0.533333rem;}
+	#statistics .bill .bill_bottom .moneyOut{width: 3.226667rem;padding-left: 0.533333rem;}
+	#statistics .bill .bill_bottom .list .num{
+		font-size: 0.533333rem;color: #4C4C4C;line-height: 0.533333rem;padding: 0.48rem 0 0.213333rem;
+	}
+	#statistics .bill .bill_bottom .list .name{
+		font-size: 0.373333rem;line-height: 0.373333rem;color: #A0A0A0;font-family: PingFangSC-Regular;
+	}
+	#statistics .bill .bill_bottom .dashed{
+		width: 1px;
+		height: 1.066667rem;
+		border-right: 1px dashed #A0A0A0;
+		margin-top: 0.56rem;
+	}
+
+	#statistics .budget{
+		background: #fff;
+		height: 4.426667rem;
+		margin-bottom: 0.266667rem;
+	}
+	#statistics .budget .title{
+		padding-top: 0.533333rem;
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		font-family: PingFangSC-Regular;
+		color: #4C4C4C;
+		padding-left: 0.533333rem;
+	}
+	#statistics .budget .title .num{padding-right: 0.533333rem;position: relative;}
+	#statistics .budget .title .num img{height: 0.373333rem;width: 0.373333rem;display: inline-block;margin-left: 0.346667rem;}
+	#statistics .budget .title .num .yusuan{
+		text-align: right;
+		width: 2.666667rem;
+	}
+	#statistics .budget .title .num .layInput{
+		position: absolute;
+		top:-0.213333rem;
+		right: 0;
+		width: 3.8rem;
+		height: 0.8rem;
+	}
+	
+	#statistics .budget .content .ring{
+		height: 2.453333rem;
+		width: 2.453333rem;
+		margin: 0.533333rem 0.8rem 0 0.533333rem;
+		overflow: hidden;
+		position: relative;
+	}
+	#statistics .budget .content .mainBili{
+		height: 2.453333rem;
+		width: 2.453333rem;
+		position: absolute;
+		top:0;
+		left: 0;
+		padding-top: 0.72rem;
+		z-index: 110;
+	}
+	#statistics .budget .content .mainBili .bili{
+		text-align: center;
+		/*background: #fff;*/
+	}
+	#statistics .budget .content .mainBili .bili .biliNum{
+		font-family: PingFangSC-Medium;
+		font-size: 0.48rem;
+		line-height: 0.48rem;
+		color: #008BFF;
+	}
+	#statistics .budget .content .mainBili .bili .tips{
+		padding-top: 0.16rem;
+		font-family: PingFangSC-Regular;
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		color: #A0A0A0;
+	}
+	#statistics #container{
+		position: absolute;top:-1.333333rem;left: -1.333333rem;z-index: 100;
+	}
+	#statistics .budget .content .yuan{
+        width: 2.453333rem;
+        height: 2.453333rem;
+        display: -webkit-box;
+        -webkit-box-pack: center;
+        -webkit-box-align: center;
+        background: #fff;
+        border-radius: 50%;
+        box-shadow: 0 0 0 0.213333rem #D8D8D8 inset;
+    }
+
+    #statistics .demo1-bg2-1,.demo1-bg2-2{
+        position: relative;
+        margin: 0;
+        padding: 0;
+        -webkit-box-flex: 1;
+        height: 2.453333rem;
+        background: #fff;
+        border: 0.213333rem solid #008BFF;
+    }
+    #statistics .demo1-bg2-1{
+        border-radius: 1.226667rem 0 0 1.226667rem;
+        border-color: #008BFF transparent #008BFF #008BFF;
+        transform-origin: 100% 50%;
+        z-index: 1;
+    }
+    #statistics .demo1-bg2-2{
+        border-radius: 0 1.226667rem 1.226667rem 0;
+        border-color: #008BFF #008BFF #008BFF transparent;
+        transform-origin: 0 50%;
+        z-index: 2;
+        }
+    #statistics .budget .content .mainNum{width: 6.2133rem;}
+    #statistics .budget .content .mainNum .sum{
+    	padding: 0.8rem 0.533333rem 0.48rem 0;
+    }
+    #statistics .budget .content .mainNum .sum span{
+    	font-size: 0.373333rem;
+    	line-height: 0.373333rem;
+    	margin-top: -0.08rem;
+    	font-family: PingFangSC-Regular;
+    }
+    #statistics .budget .content .mainNum .sum .money{
+    	font-size: 0.533333rem;
+    	line-height: 0.533333rem;
+    }
+    #statistics .budget .content .mainNum .sunList{
+    	color: #A0A0A0;
+    	font-size: 0.373333rem;
+    	line-height: 0.373333rem;
+    	padding: 0 0.533333rem 0.266667rem 0;
+    }
+    #statistics .budget .content .mainNum .sunList span{
+    	display: inline-block;
+    	padding-left: 0.4rem;
+    }
+	
+	#statistics .flowList{
+		background: #fff;;
+	}
+	#statistics .flowList .title{
+		height: 1.28rem;
+		line-height: 0.373333rem;
+		font-size: 0.373333rem;
+		padding: 0.533333rem 0 0.373333rem 0.533333rem;
+	}
+    #statistics .flowList .list{
+		height: 1.866667rem;
+		width: 9.466667rem;
+		background: #fff;
+		margin: 0 0.133333rem;
+    }
+    #statistics .flowList .list .info .imgs{
+    	height: 0.8rem;
+    	width: 0.8rem;
+    	margin: 0.533333rem 0.266667rem 0 0.533333rem;
+    }
+   	#statistics  .flowList .list .info .name{
+    	font-size: 0.426667rem;
+    	line-height: 0.426667rem;
+    	color: #4C4C4C;
+    	padding-top: 0.693333rem;
+    	font-family: PingFangSC-Regular;
+    }
+    #statistics .flowList .list .moneyNum{
+    	font-size: 0.533333rem;
+    	line-height: 0.533333rem;
+    	color: #4C4C4C;
+    	padding-top: 0.666667rem;
+    	padding-right: 0.56rem;
+    	font-family: PingFangSC-Medium;
+    }
+    #statistics .bill .bill_top .month .monthList{
+    	position: absolute;
+    	top: 1.36rem;
+    	right: 0.373333rem;
+    	height: 2.08rem;
+    	width: 1.866667rem;
+    	border-radius: 0.106667rem;
+    	overflow: hidden;
+    }
+    #statistics .bill .bill_top .month .monthList .list{
+    	height: 1.04rem;
+    	text-align: center;
+    	line-height: 1.04rem;
+    	font-size: 0.426667rem;
+    	color: #fff;
+    	background: #008BFF;
+    }
+
+    #statistics .null{padding-top: 0.08rem}
+    #statistics .null .imgs{
+    	height: 2.4rem;
+    	width: 3.2rem;
+    	display: block;
+    	margin: 0 auto;
+    }
+    #statistics .null p.text{
+    	font-size: 0.426667rem;
+    	line-height: 0.586667rem;
+    	padding: 0.8rem 0 1.066667rem;
+    	color: #A0A0A0;
+    	text-align: center;
+    }
+    [v-cloak] {
+      display: none;
+    }
+</style>
+<body>
+	<div id="doorData">
+		<div ref="doorConBox" id="doorConBox" class="doorConBox">
+			<div :class="{rightContents:btnList[1]}" class="contents leftContents">
+				<div ref="leftIframe" class="leftIframe">
+					<div  v-cloak id="IndexData">
+						<div id="topBox">
+							<header>
+								<div class="top">
+									<span>记账</span>
+									<div class="tips"></div>
+								</div>
+								<div class="sum">{{indexSumMoneyIn-indexSumMoneyOut | moneyFormat}}</div>
+								<div class="text">余额(元)</div>
+							</header>
+							<div class="money clear">
+								<div class="money_in fl">
+									<div class="num">{{indexSumMoneyIn | moneyFormat}}</div>
+									<div class="text">收入(元)</div>
+								</div>
+								<div class="line bdr-l"></div>
+								<div class="money_out fl">
+									<div class="num">{{indexSumMoneyOut | moneyFormat}}</div>
+									<div class="text">支出(元)</div>
+								</div>
+							</div>
+
+						</div>
+						<div v-if="dayData.length != 0" ref="listBox" class="listBox">
+							<div class="listSum">
+								<div v-for="item in dayData" class="moneyList">
+									<div class="title clear">
+										<div class="time fl clear"><i class="fl"></i><span>{{item.dateTime}}</span><span>{{item.week}}</span></div>
+										<div class="moneyTip fr">收入：{{item.sumMoneyIn}}   支出：{{item.sumMoneyOut}}</div>
+									</div>
+									<div v-for="detail in item.dayDetail" class="detailList">
+										<div class="info fl clear">
+											<img :src="detail.actImgSrc" alt="" class="imgs fl">
+											<div class="name fl">{{detail.typeName}}</div>
+										</div>
+										<div class="moneyNum fr">{{(detail.type ? '+':'-')}}{{detail.money | moneyFormat}}</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div v-else class="null">
+							<img class="imgs" src="imgs/null.png" alt="">
+							<p class="text">你还没有记账哦</p>
+							<div class="btn">记一笔</div>
+						</div>
+					</div>
+				</div>
+				<div ref="rightIframe" class="rightIframe">
+					<div ref="statistics" id="statistics">
+						<div class="statisticsBox">
+							<div :class="{topRight:topRight}" class="top">统计<div class="tips"></div></div>
+							<div class="topTi"></div>
+							<div class="bill">
+								<div class="bill_top clear">
+									<div class="text fl">账单</div>
+									<div @click="showDownList = true" class="month fr">{{(choiceList[2].m<10 ? '0':'') + choiceList[2].m}}月
+										<img src="imgs/monthBot.png">
+										<div v-if="showDownList" class="monthList">
+											<div @click.stop="changeMonth(choiceList[1],1)" class="list">{{(choiceList[1].m<10 ? '0':'') + choiceList[1].m}}月</div>
+											<div @click.stop="changeMonth(choiceList[0],0)" class="list">{{(choiceList[0].m<10 ? '0':'') + choiceList[0].m}}月</div>
+										</div>
+									</div>
+								</div>
+								<div class="line"></div>
+								<div class="bill_bottom">
+									<div class="surplus list fl">
+										<div class="num">{{activeData.moneyIn - activeData.moneyOut | moneyFormat}}</div>
+										<div class="name">本月结余</div>
+									</div>
+									<div class="dashed fl"></div>
+									<div class="moneyIn list fl">
+										<div class="num">{{activeData.moneyIn | moneyFormat}}</div>
+										<div class="name">本月收入</div>
+									</div>
+									<div class="dashed fl"></div>
+									<div class="moneyOut list fl">
+										<div class="num">{{activeData.moneyOut | moneyFormat}}</div>
+										<div class="name">本月支出</div>
+									</div>
+								</div>
+							</div>
+							<div class="budget">
+								<div class="title clear">
+									<div class="titName fl">05月预算</div>
+									<div class="num fr"><input v-model="budget" ref="yusuan" class="yusuan" type="num" name=""><img src="imgs/editor.png"><div @click="changeBud" class="layInput"></div></div>
+								</div>
+								<div class="content clear">
+									<div class="ring fl">
+										<div id="container" style="width:5.12rem;height:5.12rem;"></div>
+										<div class="mainBili">
+											<div class="bili">
+												<div class="biliNum">{{parseInt(((budget - activeData.moneyOut)/budget)*100)>=0 ? parseInt(((budget - activeData.moneyOut)/budget)*100):0}}%</div>
+												<div class="tips">剩余</div>
+											</div>
+										</div>
+										<!-- <div class="yuan">
+											<div id="J_bg2_1" class="demo1-bg2-1"></div>
+											<div id="J_bg2_2" class="demo1-bg2-2"></div>
+										</div> -->
+									</div>
+									<div class="mainNum fl">
+										<div class="sum clear">
+											<span class="fl">剩余预算</span>
+											<span class="money fr">{{budget - activeData.moneyOut}}</span>
+										</div>
+										<div class="sunList clear">
+											<div class="listName fl">主要收入</div>
+											<div class="right fr">{{maxMoneyInName}}收入<span>+{{maxMoneyIn | moneyFormat}}</span></div>
+										</div>
+										<div class="sunList clear">
+											<div class="listName fl">主要支出</div>
+											<div class="right fr">{{maxMoneyOutName}}支出<span>-{{maxMoneyOut | moneyFormat}}</span></div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="flowList">
+								<div class="title">本月收支</div>
+								<div v-if="activeMonth.length != 0">
+									<div v-for="item in activeMonth" class="list">
+										<div class="info fl clear">
+											<img :src="item.actImgSrc" alt="" class="imgs fl">
+											<div class="name fl">{{item.typeName + (item.type ? '收入':'支出')}}</div>
+										</div>
+										<div class="moneyNum fr">{{(item.type ? '+':'-')}}{{item.money | moneyFormat}}</div>
+									</div>
+									
+								</div>
+								<div v-else class="null">
+									<img class="imgs" src="imgs/null.png" alt="">
+									<p class="text">你还没有记账哦</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div v-if="dayData.length == 0" @click="toAppUrl" class="toBtn"></div>
+		<div @click="toMessage" class="message"></div>
+		<div v-if="btnList[0]" @click="toRecord" class="jia"></div>
+		<div id="btns" class="btns">
+			<div @click="clickBom(0)" class="btn btn1 fl">
+				<img :src="btnimg1" alt="">
+			</div>
+			<div @click="clickBom(1)" class="btn btn2 fl">
+				<img :src="btnimg2" alt="">
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	function init(){
+	    var width = document.documentElement.clientWidth; //获取设备的宽度
+	    //动态的为根元素设置字体的大小
+	    document.documentElement.style.fontSize = 32 * (width/320)*0.5 + 'px';
+	    document.getElementsByTagName('body')[0].style.fontSize= 16 + 'px';
+
+	    const ua = navigator.userAgent.toLowerCase();
+	      if (/iphone|ipad|ipod/.test(ua) || /android/.test(ua)) {
+	    document.documentElement.style.fontSize = 32 * (width/320) + 'px';
+	        document.getElementsByTagName('body')[0].style.background= '#F8F8F8';
+	        //document.getElementsByTagName('body')[0].style.fontFamily= '微软雅黑';
+	    }
+	}
+	var browserRule = /^.*((iPhone)|(iPad)|(Safari)|(android))+.*$/;  
+    if (browserRule.test(navigator.userAgent)) {  
+        window.onpageshow = function(event) {  
+            if (event.persisted) {  
+                window.location.reload();
+                
+            }  
+        };  
+    }  
+	init();
+	window.addEventListener('resize', init)
+
+</script>
+<script type="text/javascript">
+	var app4 = new Vue({
+	    el: '#doorData',
+	    data: {
+	    	topRight:0,
+	    	showIframe:[0,0],
+	    	dayData:[],
+	        btnList:[1,0],
+	        btnimg1:'imgs/actZhangdan.png',
+	        btnimg2:'imgs/tongji.png',
+	        //原index.html数据
+	        sumMoneyList:[],
+	        balance:0,
+	        indexSumMoneyIn:0,
+	        indexSumMoneyOut:0,
+	        //原statistics.html数据
+          	activeIndexList:[],
+          	budget:5000,
+          	titleBili:0,
+          	classData:{
+          		"moneyOut":[
+        			{
+        				"imgSrc":"imgs/expenditure/1_2.png",
+        				"actImgSrc":"imgs/expenditure/1_1.png",
+        				"isAct":1,
+        				"typeName":"一般",
+        				"ty":1,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/2_2.png",
+        				"actImgSrc":"imgs/expenditure/2_1.png",
+        				"isAct":0,
+        				"typeName":"餐饮",
+        				"ty":2,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/3_2.png",
+        				"actImgSrc":"imgs/expenditure/3_1.png",
+        				"isAct":0,
+        				"typeName":"购物",
+        				"ty":3,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/4_2.png",
+        				"actImgSrc":"imgs/expenditure/4_1.png",
+        				"isAct":0,
+        				"typeName":"服饰",
+        				"ty":4,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/5_2.png",
+        				"actImgSrc":"imgs/expenditure/5_1.png",
+        				"isAct":0,
+        				"typeName":"交通",
+        				"ty":5,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/6_2.png",
+        				"actImgSrc":"imgs/expenditure/6_1.png",
+        				"isAct":0,
+        				"typeName":"娱乐",
+        				"ty":6,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/7_2.png",
+        				"actImgSrc":"imgs/expenditure/7_1.png",
+        				"isAct":0,
+        				"typeName":"社交",
+        				"ty":7,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/8_2.png",
+        				"actImgSrc":"imgs/expenditure/8_1.png",
+        				"isAct":0,
+        				"typeName":"通讯",
+        				"ty":8,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/9_2.png",
+        				"actImgSrc":"imgs/expenditure/9_1.png",
+        				"isAct":0,
+        				"typeName":"美容",
+        				"ty":9,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/10_2.png",
+        				"actImgSrc":"imgs/expenditure/10_1.png",
+        				"isAct":0,
+        				"typeName":"旅行",
+        				"ty":10,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/11_2.png",
+        				"actImgSrc":"imgs/expenditure/11_1.png",
+        				"isAct":0,
+        				"typeName":"数码",
+        				"ty":11,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/12_2.png",
+        				"actImgSrc":"imgs/expenditure/12_1.png",
+        				"isAct":0,
+        				"typeName":"学习",
+        				"ty":12,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/13_2.png",
+        				"actImgSrc":"imgs/expenditure/13_1.png",
+        				"isAct":0,
+        				"typeName":"医疗",
+        				"ty":13,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/14_2.png",
+        				"actImgSrc":"imgs/expenditure/14_1.png",
+        				"isAct":0,
+        				"typeName":"礼金",
+        				"ty":14,
+        				"type":0
+        			},
+        			{
+        				"imgSrc":"imgs/expenditure/15_2.png",
+        				"actImgSrc":"imgs/expenditure/15_1.png",
+        				"isAct":0,
+        				"typeName":"还钱",
+        				"ty":15,
+        				"type":0
+        			}
+        		],
+        		"moneyIn":[
+        			{
+        				"imgSrc":"imgs/income/1_2.png",
+        				"actImgSrc":"imgs/income/1_1.png",
+        				"isAct":1,
+        				"typeName":"工资",
+        				"ty":1,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/2_2.png",
+        				"actImgSrc":"imgs/income/2_1.png",
+        				"isAct":0,
+        				"typeName":"兼职",
+        				"ty":2,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/3_2.png",
+        				"actImgSrc":"imgs/income/3_1.png",
+        				"isAct":0,
+        				"typeName":"理财",
+        				"ty":3,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/4_2.png",
+        				"actImgSrc":"imgs/income/4_1.png",
+        				"isAct":0,
+        				"typeName":"红包",
+        				"ty":4,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/5_2.png",
+        				"actImgSrc":"imgs/income/5_1.png",
+        				"isAct":0,
+        				"typeName":"奖金",
+        				"ty":5,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/6_2.png",
+        				"actImgSrc":"imgs/income/6_1.png",
+        				"isAct":0,
+        				"typeName":"报销",
+        				"ty":6,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/7_2.png",
+        				"actImgSrc":"imgs/income/7_1.png",
+        				"isAct":0,
+        				"typeName":"现金",
+        				"ty":7,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/8_2.png",
+        				"actImgSrc":"imgs/income/8_1.png",
+        				"isAct":0,
+        				"typeName":"捡的",
+        				"ty":8,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/9_2.png",
+        				"actImgSrc":"imgs/income/9_1.png",
+        				"isAct":0,
+        				"typeName":"私房钱",
+        				"ty":9,
+        				"type":1
+        			},
+        			{
+        				"imgSrc":"imgs/income/10_2.png",
+        				"actImgSrc":"imgs/income/10_1.png",
+        				"isAct":0,
+        				"typeName":"其它",
+        				"ty":10,
+        				"type":1
+        			}
+        		]
+          	},
+          	activeData:{
+          		moneyIn:0,
+          		moneyOut:0,
+          	},
+          	mainData:{
+          		moneyIn:0,
+          		moneyOut:0
+          	},
+          	moneyInList:[0,0,0,0,0,0,0,0,0,0],
+          	moneyOutList:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          	maxMoneyIn:0,
+          	maxMoneyInName:'',
+          	maxMoneyOut:0,
+          	maxMoneyOutName:'',
+          	showDownList:false,
+        	choiceList:[],
+          	yearNum:0,
+          	monthNum:0,
+          	yearLen:0,
+          	monthLen:0,
+          	activeMonth:{},
+          	monthData:[
+          		{
+          			monthDetail:[
+          				{
+          					everyDetail:[]
+          				}
+          			]
+          		}
+          	]
+	    },
+	    methods:{
+	    	toAppUrl(){
+	    		window.location.href = 'record.html'
+	    	},
+	    	toMessage(){
+	    		window.location.href = 'message.html'
+	    	},
+	    	toRecord(){
+	    		window.location.href = 'record.html'
+	    	},
+	    	clickBom(index){
+	    		if(index){
+					this.topRight = 1;
+					console.log(13)
+				}else{
+					console.log(123456)
+					this.topRight = 0;
+				}
+	    		this.$set(this.btnList,0,0);
+	    		this.$set(this.btnList,1,0);
+	    		this.$set(this.btnList,index,1);
+	    		 // document.documentElement.scrollTop = document.body.scrollTop = 0;
+	    		if(index == 0){
+	    			this.btnimg1 = 'imgs/actZhangdan.png';
+	    			this.btnimg2 = 'imgs/tongji.png';
+	    		}else{
+	    			this.btnimg1 = 'imgs/zhangdan.png';
+	    			this.btnimg2 = 'imgs/actTongji.png';
+	    		}
+	    	},
+	    	//index方法
+	    	getEveryInOut(){
+	    		for(var i=0;i<this.dayData.length;i++){
+	    			var sumMoneyIn=0;
+	    			var sumMoneyOut=0;
+	    			for(var j=0;j<this.dayData[i].dayDetail.length;j++){
+	    				if(this.dayData[i].dayDetail[j].type){
+	    					sumMoneyIn += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    					this.indexSumMoneyIn += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    				}else{
+	    					sumMoneyOut += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    					this.indexSumMoneyOut += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    				}
+	    			}
+	    			this.dayData[i].sumMoneyIn = sumMoneyIn;
+	    			this.dayData[i].sumMoneyOut = sumMoneyOut;
+	    		}
+	    	},
+	    	//staticics方法
+	    	changeBud(){
+	    		this.$refs.yusuan.focus();
+	    	},
+	    	changeMonth(item,index){
+	    		this.showDownList = false;
+	    		console.log(this.showDownList)
+	    		var actMonth = item;
+	    		var firstMonth = this.choiceList[2];
+	    		this.$set(this.choiceList,2,item);
+	    		this.$set(this.choiceList,index,firstMonth);
+
+	    		for(var i=0;i<this.monthData.length;i++){
+	    			if(this.monthData[i].year == this.choiceList[2].y){
+	    				for(var j=0;j<this.monthData[i].monthDetail.length;j++){
+	    					if(this.monthData[i].monthDetail[j].month == this.choiceList[2].m){
+	    						this.activeMonth = this.monthData[i].monthDetail[j].everyDetail;
+	    						this.activeIndexList = [i,j];
+	    					}else{
+	    						this.activeMonth = [];
+	    						this.activeIndexList = [];
+	    					}
+	    				}
+	    			}
+	    		}
+	    		if(this.activeIndexList.length == 2){
+	    			this.budget = this.monthData[this.activeIndexList[0]].monthDetail[this.activeIndexList[1]].budget
+	    		}else{
+	    			this.budget = 5000;
+	    		}
+
+	    		this.changeMonFun();
+	    	},
+	    	changeMonFun(){
+	    		if(this.activeMonth.length == 0){
+	    			console.log(123)
+	    			this.maxMoneyIn = 0;
+	    			this.maxMoneyInName = '工资'
+	    			this.maxMoneyOut = 0;
+	    			this.maxMoneyOutName = '一般';
+	    			this.activeData.moneyIn = 0;
+	    			this.activeData.moneyOut = 0;
+	    			return;
+	    		}
+	    		for(var i=0;i<this.activeMonth.length;i++){
+	    			console.log(typeof this.activeMonth[i].money)
+	    			if(this.activeMonth[i].type){
+	    				this.activeData.moneyIn += parseInt(this.activeMonth[i].money*100)/100
+	    			}else{
+	    				this.activeData.moneyOut += parseInt(this.activeMonth[i].money*100)/100
+	    			}
+	    		}
+	    		for(var i=0;i<this.activeMonth.length;i++){
+	    			if(this.activeMonth[i].type){
+	    				for(var j=0;j<10;j++){
+	    					if(this.activeMonth[i].ty == (j+1)){
+	    						this.moneyInList[j] += parseInt(this.activeMonth[i].money*100)/100;
+	    					}
+	    				}
+	    			}else{
+	    				for(var j=0;j<15;j++){
+	    					if(this.activeMonth[i].ty == (j+1)){
+	    						this.moneyOutList[j] += parseInt(this.activeMonth[i].money*100)/100;
+	    					}
+	    				}
+	    			}
+	    		}
+	    		this.maxMoneyIn = this.moneyInList.max().value;
+	    		this.maxMoneyInName = this.classData.moneyIn[this.moneyInList.max().index].typeName;
+	    		this.maxMoneyOut = this.moneyOutList.max().value;
+	    		this.maxMoneyOutName = this.classData.moneyOut[this.moneyOutList.max().index].typeName;
+	    	},
+	    	getRing(){
+	    		var bg1 = document.querySelector("#J_bg2_1");
+	    		var bg2 = document.querySelector("#J_bg2_2");
+
+	    		var val = 30
+	    		val = Math.max(0,val);
+	    		val = Math.min(100,val);
+	    		if (val <= 50){
+	    		    bg2.style.transform = "rotate(" + 180 * val * 2 / 100 + "deg)";
+	    		    bg2.style.borderColor = "#008BFF #008BFF #008BFF transparent";
+	    		    bg1.style.transform = "rotate(0deg)";
+	    		}else{
+	    		    bg2.style.transform = "rotate(0deg)";
+	    		    bg2.style.borderColor = "#D8D8D8 #D8D8D8 #D8D8D8 transparent";
+	    		    bg1.style.transform = "rotate(" + 180 * (val - 50) * 2 / 100 + "deg)";
+	    		}
+	    	},
+	    	getMonthData(){
+	    		if(localStorage.getItem('monthData')){
+	    			this.monthData = JSON.parse(localStorage.getItem('monthData'));
+	    		}
+	    		this.yearLen = this.monthData.length -1;
+
+	    		this.monthLen = this.monthData[this.yearLen].monthDetail.length -1;
+	    	},
+	    	setRing(){
+	    		var that = this;
+	    		var chart = Highcharts.chart('container', {
+	    				chart: {
+	    						spacing : [40, 0 , 40, 0]
+	    				},
+	    				tooltip : {
+	    						shared: false, 
+	    				},
+	    				title: {
+	    						floating:true,
+	    						text:''
+	    						// text: parseInt(100 - (this.activeData.moneyOut/this.budget)*100)+'%<br/> <span>剩余</span>'
+	    				},
+	    				series: [{
+	    						type: 'pie',
+	    						innerSize: '80%',
+	    						colors:['#D8D8D8','#008BFF'],
+	    						name: '市场份额',
+	    						dataLabels: {
+	    								enabled: false,
+	    						},
+	    						data: [
+	    								['Safari',   100- parseInt(((this.budget - this.activeData.moneyOut)/this.budget)*100)],
+	    								['Opera',    parseInt(((this.budget - this.activeData.moneyOut)/this.budget)*100)],
+	    						]
+	    				}]
+	    		}, function(c) { // 图表初始化完毕后的会掉函数
+	    				// 环形图圆心
+	    				var centerY = c.series[0].center[1],
+	    						titleHeight = parseInt(c.title.styles.fontSize);
+	    				// 动态设置标题位置
+	    				c.setTitle({
+	    						y:centerY + titleHeight/2
+	    				});
+	    		});
+	    	}
+	    },
+	    watch:{
+	    	'budget'(val){
+	    		this.setRing();
+	    		if(this.activeIndexList.length == 2){
+					console.log(val +'11111111111')
+	    			this.monthData[this.activeIndexList[0]].monthDetail[this.activeIndexList[1]].budget = val
+	    			localStorage.setItem("monthData",JSON.stringify(this.monthData));
+	    		}
+	    	}
+	    },
+	    created(){
+			if(localStorage.getItem('dayData')){
+				this.dayData = JSON.parse(localStorage.getItem('dayData'));
+			}
+			//index方法
+			this.getEveryInOut()
+			//statistics代码
+		  	Array.prototype.max = function() { 
+			  	var max = this[0];
+			  	var index = 0;
+			  	var len = this.length; 
+			  	for (var i = 1; i < len; i++){ 
+				  	if (this[i] > max) { 
+				  		max = this[i]; 
+				  		index = i;
+				  	} 
+			  	} 
+			  	return {value:max,index:index};
+		  	}
+
+		  	// this.getRing();
+		  	this.getMonthData()
+		  	var myDate = new Date();
+		  	this.yearNum = myDate.getFullYear();
+		  	this.monthNum = myDate.getMonth() + 1;
+		  	for(var i=0;i<this.monthData.length;i++){
+		  		if(this.monthData[i].year == this.yearNum){
+		  			for(var j=0;j<this.monthData[i].monthDetail.length;j++){
+		  				if(this.monthData[i].monthDetail[j].month == this.monthNum){
+		  					this.activeMonth = this.monthData[i].monthDetail[j].everyDetail;
+		  					this.activeIndexList = [i,j];
+		  					
+		  				}
+		  			}
+		  		}
+		  	}
+		  	if(this.activeIndexList.length == 2){
+		  		this.budget = this.monthData[this.activeIndexList[0]].monthDetail[this.activeIndexList[1]].budget
+		  	}
+		  	
+		  	this.changeMonFun();
+
+		  	if(this.moneyNum == 1){
+		  		this.choiceList = [{y:this.yearNum -1,m:11},{y:this.yearNum -1,m:12},{y:this.yearNum,m:1}]
+		  	}else if(this.moneyNum == 2){
+		  		this.choiceList = [{y:this.yearNum -1,m:12},{y:this.yearNum ,m:1},{y:this.yearNum,m:2}]
+		  	}else{
+		  		this.choiceList = [{y:this.yearNum,m:this.monthNum-2},{y:this.yearNum,m:this.monthNum-1},{y:this.yearNum,m:this.monthNum}]
+		  	}
+	    },
+		mounted(){
+			var height = document.documentElement.clientHeight;
+			var topHeight = document.getElementById('btns').clientHeight;
+			this.$set(this.btnList,0,1);
+			this.$set(this.btnList,1,0);
+			this.$refs.leftIframe.style.height = height - topHeight +'px'
+			this.$refs.rightIframe.style.height = height - topHeight +'px'
+			console.log(this.$refs);
+			this.$refs.doorConBox.style.height = height - topHeight +'px'
+			if(localStorage.getItem('dayData')){
+				this.dayData = JSON.parse(localStorage.getItem('dayData'));
+			}
+
+			//statistics方法
+			this.setRing();
+
+			//index方法
+			var topBoxHeight = document.getElementById('topBox').clientHeight;
+
+			this.$refs.listBox.style.height = height - topBoxHeight - topHeight +'px'
+
+			this.$refs.statistics.style.height = height - topHeight +'px';
+			
+		}
+	})
+</script>
+</html>

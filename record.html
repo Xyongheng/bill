@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<title>Document</title>
+	<script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.js"></script>
+	<script src="https://cdn.bootcss.com/vue-router/3.0.1/vue-router.min.js"></script>
+</head>
+<link rel="stylesheet" type="text/css" href="css/public.css">
+<style type="text/css">
+	#record{
+		font-family: PingFangSC-Regular;
+		font-size: 0.373333rem;
+	}
+	.top{
+		height: 1.733333rem;
+		background: #fff;
+		padding-top: 0.826667rem;
+		position: relative;
+	}
+	.top .leftBox{
+		position: absolute;
+		bottom: 0.3rem;
+		left: 0.48rem;
+		height: 0.8rem;
+		width: 0.8rem;
+		padding-top: 0.32rem;
+		
+	}
+	.top .toleft{
+		height: 0.453333rem;
+		width: 0.24rem;
+		background: url(imgs/toleft2.png) no-repeat;
+		background-size: 100% 100%;
+	}
+	.top .btns{
+		height: 0.693333rem;
+		width: 3.2rem;
+		border: 1px solid #008BFF;
+		color: #008BFF;
+		border-radius: 0.106667rem;
+		margin: 0 auto;
+		overflow: hidden;
+		font-size: 0.373333rem;
+		line-height: 0.693333rem;
+	}
+	.top .btn{
+		width: 50%;
+		height: 100%;
+		text-align: center;
+	}
+	.top .activeBtn{
+		background: #008BFF;
+		color: #fff;
+	}
+	.entry{
+		height: 2.133333rem;
+		background: #fff;
+		margin-bottom: 0.533333rem;
+	}
+	.entry .info img{
+		height: 1.066667rem;
+		width: 1.066667rem;
+		margin: 0.506667rem 0.266667rem 0 0.533333rem;
+
+	}
+	.entry .info .typeName{
+		padding-top: 0.853333rem;
+		font-size: 0.426667rem;
+		line-height: 0.426667rem;
+		color: #4C4C4C;
+	}
+	.entry .moneyNum{
+		text-align: right;
+		width: 5rem;
+		font-size: 0.8rem;
+		line-height: 0.8rem;
+		color: #A0A0A0;
+		padding-top: 0.64rem;
+		padding-right: 0.533333rem;
+	}
+	.entry .colorInput{
+		color: #4C4C4C;
+	}
+	.classList{background: #fff; height: 500px;}
+	.classList .list{
+		height: 2.24rem;
+		width: 20%;
+		padding-top: 0.533333rem;
+	}
+	.classList .list .imgs{
+		height: 1.066667rem;
+		width: 1.066667rem;
+		display: block;
+		margin: 0 auto 0.266667rem;
+	}
+	.classList .list .text{
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		color: #A0A0A0;
+		text-align: center;
+	}
+	.classList .activeList .text{
+		color: #51C566;
+	}
+	.conBox{
+		width: 10.0rem;
+		position: relative;
+		overflow: hidden;
+		/* height: 10.666667rem; */
+	}
+	.contents{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 20.0rem;
+		height: 100%;
+	}
+	.con{
+		width: 10rem;
+		height: 100%;
+	}
+	.conBox .leftContents{
+		top: 0;
+		left: 0;
+		transition: all 0.4s;
+	}
+	.conBox .rightContents{
+		top: 0;
+		left: -10rem;
+		transition: all 0.4s;
+	}
+	.layer{
+		position: fixed;
+		width: 100%;
+		height: 5.226667rem;
+		bottom: 0;
+		left: 0;
+		background: #fff;
+	}
+	.layer .keyboard{height: 100%;border-top: 1px solid #E9E9E9;}
+	.layer .leftNum{
+		width: 7.52rem;
+		line-height: 1.306667rem;
+		text-align: center;
+	}
+	.layer .leftNum .numBox .num{
+		width: 2.506667rem;
+		height: 1.333333rem;
+		border-right: 1px solid #E9E9E9;
+		border-bottom: 1px solid #E9E9E9;
+		color: #4C4C4C;
+	}
+	.layer .leftNum .dian{
+		height: 1.333333rem;
+		width: 2.506667rem;
+		border-right: 1px solid #E9E9E9;
+	}
+	.layer .leftNum .shi{
+		height: 1.333333rem;
+		width: 5.013333rem;
+		border-right: 1px solid #E9E9E9;
+	}
+	.layer .funKey{
+		width: 2.48rem;
+	}
+	.layer .funKey .del{
+		height: 2.64rem;
+		padding: 1.066667rem 0 0 0.88rem;
+	}
+	.layer .funKey .del img{
+		height: 0.56rem;
+		width: 0.853333rem;
+		display: block;
+	}
+	.layer .funKey .ok{
+		height: 2.64rem;
+		background: #008BFF;
+		color: #fff;
+		font-size: 0.48rem;
+		line-height: 2.64rem;
+		text-align: center;
+	}
+	iframe{
+		width: 10.0rem;
+		height: 10.666667rem;
+		float: left;
+	}
+	[v-cloak] {
+	  display: none;
+	}
+</style>
+<body>
+	<div id="record">
+		<div id="top" class="top">
+			<div @click="toLeft" class="leftBox">
+				<div  class="toleft"></div>
+			</div>
+			<div class="btns clear">
+				<div @click="changeBtn(0)" :class="{activeBtn:activeBtn[0]}" class="btn fl">收入</div>
+				<div @click="changeBtn(1)" :class="{activeBtn:activeBtn[1]}" class="btn fl">支出</div>
+			</div>
+		</div>
+		<div ref="conBox" class="conBox">
+			<div :class="{rightContents:activeBtn[1]}" class="contents leftContents">
+				<iframe ref="iframe1" align="center" width="10.0rem" height="auto" src="recordIn.html"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+				<iframe ref="iframe2" align="center" width="10.0rem" height="auto" src="recordOut.html"  frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no"></iframe>
+			</div>
+		</div>
+
+	</div>
+</body>
+<script>
+	function init(){
+	    var width = document.documentElement.clientWidth; //获取设备的宽度
+	    //动态的为根元素设置字体的大小
+	    document.documentElement.style.fontSize = 32 * (width/320)*0.5 + 'px';
+	    document.getElementsByTagName('body')[0].style.fontSize= 16 + 'px';
+
+	    const ua = navigator.userAgent.toLowerCase();
+	    if (/iphone|ipad|ipod/.test(ua) || /android/.test(ua)) {
+	    document.documentElement.style.fontSize = 32 * (width/320) + 'px';
+	        document.getElementsByTagName('body')[0].style.background= '#F8F8F8';
+	        //document.getElementsByTagName('body')[0].style.fontFamily= '微软雅黑';
+	    }
+	}
+	init();
+	window.addEventListener('resize', init)
+
+</script>
+<script type="text/javascript">
+	var app4 = new Vue({
+	  el: '#record',
+	  data: {
+	  	showLayer:false,
+	  	activeBtn:[1,0],
+	  },
+	  methods:{
+	  	toLeft(){
+	  		window.location.href = 'indexDoor.html';
+	  	},
+	  	changeBtn(index){
+	  		this.$set(this.activeBtn,0,0);
+	  		this.$set(this.activeBtn,1,0);
+	  		this.$set(this.activeBtn,index,1);
+	  		var optionss=localStorage.getItem("classData");    
+	  	},
+	  	
+	  },
+	  created(){
+	  },
+	  mounted(){
+	  	var height = document.documentElement.clientHeight;
+	  	var topHeight = document.getElementById('top').clientHeight;
+	  	this.$refs.iframe1.style.height = height - topHeight +'px'
+	  	this.$refs.iframe2.style.height = height - topHeight +'px'
+	  	this.$refs.conBox.style.height = height - topHeight +'px'
+
+	  }
+	})
+</script>
+</html>

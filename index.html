@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<title>首页</title>
+	<script src="js/vue.js"></script>
+</head>
+<link rel="stylesheet" type="text/css" href="css/public.css">
+<style type="text/css">
+	#IndexData {
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		font-family: PingFangSC-Medium;
+		overflow-y: auto;
+	}
+	#IndexData  header{
+		height: 5.013333rem;
+		background: url('imgs/indexHeader.png') no-repeat;
+		background-size: 100%  100%;
+		color: #fff;
+		text-align: center;
+	}
+	#IndexData header .top{
+		font-size: 0.426667rem;
+		text-align: center;
+		position: relative;
+		padding-top: 0.826667rem;
+		margin-bottom: 0.853333rem;
+		line-height: 0.666667rem;
+	}
+	#IndexData header .top .tips{
+		position: absolute;
+		right: 0.533333rem;
+		bottom: 0;
+		height: 0.533333rem;
+		width: 0.533333rem;
+		background: url('imgs/bell.png') no-repeat;
+		background-size: 100% 100%;
+	}
+	#IndexData header .sum{
+		font-size: 0.96rem;
+		line-height: 0.96rem;
+		/*padding-top: 2.613333rem;*/
+		padding-bottom: 0.266667rem;
+	}
+	#IndexData .money{
+		height: 2.266667rem;
+		background: #fff;
+
+	}
+	#IndexData .money .fl{width: 4.94rem;text-align: center;}
+	#IndexData .money .line{
+		float: left;
+		width: 1px;
+		height: 1.2rem;
+		margin-top: 0.533333rem;
+		border-left: 1px dashed #A0A0A0;
+		position: relative;
+	}
+	#IndexData .money .fl .num{
+		font-size: 0.533333rem;
+		line-height: 0.533333rem;
+		color: #303030;
+		padding: 0.533333rem 0 0.16rem;
+		font-family: PingFangSC-Regular;
+	}
+	#IndexData .money .fl .text{
+		font-size: 0.32rem;
+		line-height: 0.32rem;
+		color: #A0A0A0;
+		font-family: PingFangSC-Light;
+	}
+	#IndexData .moneyList{
+		/*height: 100%;*/
+		/* overflow-y: auto; */
+	}
+	#IndexData .moneyList .title{
+		height: 1.253333rem;
+	}
+	#IndexData .moneyList .title .time{
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		/* padding: 0.533333rem 0 0; */
+	}
+	#IndexData .moneyList .title .time i{
+		display: inline-block;
+		height: 0.266667rem;
+		width: 0.266667rem;
+		background: #008BFF;
+		margin: 0.586667rem 0.266667rem 0;
+		border-radius: 50%;
+	}
+	#IndexData .moneyList .title .time span{
+		float: left;
+		display: inline-block;
+		color: #4C4C4C;
+		padding-right: 0.293333rem;
+		padding-top: 0.533333rem;
+		font-family: PingFangSC-Regular;
+	}
+	#IndexData .moneyList .title .moneyTip{
+		padding: 0.586667rem 0.533333rem 0 0;
+		color: #4C4C4C;
+		font-size: 0.32rem;
+	}
+	#IndexData .moneyList .detailList{
+		height: 1.866667rem;
+		width: 9.466667rem;
+		background: #fff;
+		margin: 0 0.133333rem 0.133333rem;
+	}
+	/* .moneyList .detailList:last-child{
+		margin: 0 0.133333rem 0;
+	} */
+	#IndexData .moneyList .detailList .info .imgs{
+		height: 0.8rem;
+		width: 0.8rem;
+		margin: 0.533333rem 0.266667rem 0 0.533333rem;
+	}
+	#IndexData .moneyList .detailList .info .name{
+		font-size: 0.426667rem;
+		line-height: 0.426667rem;
+		color: #4C4C4C;
+		padding-top: 0.693333rem;
+		font-family: PingFangSC-Regular;
+	}
+	#IndexData .moneyList .detailList .moneyNum{
+		font-size: 0.533333rem;
+		line-height: 0.533333rem;
+		color: #4C4C4C;
+		padding-top: 0.666667rem;
+		padding-right: 0.56rem;
+		font-family: PingFangSC-Medium;
+	}
+	#IndexData .null{padding-top: 1.333333rem}
+	#IndexData .null .imgs{
+		height: 2.4rem;
+		width: 3.2rem;
+		display: block;
+		margin: 0 auto;
+	}
+	#IndexData .null .btn{
+		width: 3.733333rem;
+		height: 1.066667rem;
+		border-radius: 0.106667rem;
+		margin: 0 auto;
+		background: #008BFF;
+		line-height: 1.066667rem;
+		text-align: center;
+		color: #fff;
+	}
+	#IndexData .null p.text{
+		font-size: 0.426667rem;
+		line-height: 0.586667rem;
+		padding: 0.8rem 0 1.066667rem;
+		color: #A0A0A0;
+		text-align: center;
+	}
+	#IndexData .listSum{
+		height: 100%;
+		overflow-y: auto;
+	}
+	[v-cloak] {
+	  display: none;
+	}
+
+</style>
+<body>
+	<div  v-cloak id="IndexData">
+		<div id="topBox">
+			<header>
+				<div class="top">
+					<span>记账</span>
+					<div class="tips"></div>
+				</div>
+				<div class="sum">{{indexSumMoneyIn-indexSumMoneyOut | moneyFormat}}</div>
+				<div class="text">余额(元)</div>
+			</header>
+			<div class="money clear">
+				<div class="money_in fl">
+					<div class="num">{{indexSumMoneyIn | moneyFormat}}</div>
+					<div class="text">收入(元)</div>
+				</div>
+				<div class="line bdr-l"></div>
+				<div class="money_out fl">
+					<div class="num">{{indexSumMoneyOut | moneyFormat}}</div>
+					<div class="text">支出(元)</div>
+				</div>
+			</div>
+
+		</div>
+		<div v-if="dayData.length != 0" ref="listBox" class="listBox">
+			<div class="listSum">
+				<div v-for="item in dayData" class="moneyList">
+					<div class="title clear">
+						<div class="time fl clear"><i class="fl"></i><span>{{item.dateTime}}</span><span>{{item.week}}</span></div>
+						<div class="moneyTip fr">收入：{{item.sumMoneyIn}}   支出：{{item.sumMoneyOut}}</div>
+					</div>
+					<div v-for="detail in item.dayDetail" class="detailList">
+						<div class="info fl clear">
+							<img :src="detail.actImgSrc" alt="" class="imgs fl">
+							<div class="name fl">{{detail.typeName}}</div>
+						</div>
+						<div class="moneyNum fr">{{(detail.type ? '+':'-')}}{{detail.money | moneyFormat}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div v-else class="null">
+			<img class="imgs" src="imgs/null.png" alt="">
+			<p class="text">你还没有记账哦</p>
+			<div class="btn">记一笔</div>
+		</div>
+	</div>
+</body>
+<script>
+	function init(){
+	    var width = document.documentElement.clientWidth; //获取设备的宽度
+	    console.log(width)
+	    //动态的为根元素设置字体的大小
+	    document.documentElement.style.fontSize = 32 * (width/320)*0.5 + 'px';
+	    document.getElementsByTagName('body')[0].style.fontSize= 16 + 'px';
+
+	    const ua = navigator.userAgent.toLowerCase();
+	      if (/iphone|ipad|ipod/.test(ua) || /android/.test(ua)) {
+	    document.documentElement.style.fontSize = 32 * (width/320) + 'px';
+	        document.getElementsByTagName('body')[0].style.background= '#F8F8F8';
+	        //document.getElementsByTagName('body')[0].style.fontFamily= '微软雅黑';
+	    }
+	}
+		var browserRule = /^.*((iPhone)|(iPad)|(Safari)|(android))+.*$/;  
+	    if (browserRule.test(navigator.userAgent)) {  
+	        window.onpageshow = function(event) {  
+	            if (event.persisted) {  
+	                window.location.reload();
+	            }  
+	        };  
+	    }  
+	init();
+	window.addEventListener('resize', init)
+
+</script>
+<script type="text/javascript">
+	var app4 = new Vue({
+	    el: '#IndexData#IndexData ',
+	    data: {
+	        sumMoneyList:[],
+	        dayData:[],
+	        balance:0,
+	        indexSumMoneyIn:0,
+	        indexSumMoneyOut:0,
+
+	    },
+	    filters: {
+		  moneyFormat: function (money) {
+		    if(money == 0){
+	            return money+".00";
+	        }else{
+	            var n = 2;
+	            money = parseFloat((money + "").replace(/[^\d\.-]/g, "")).toFixed(n) + "";
+	            var l = money.split(".")[0].split("").reverse(), r = money.split(".")[1];
+	            var t = "";
+	            for (var i = 0; i < l.length; i++) {
+	            t += l[i] + ((i + 1) % 3 == 0 && (i + 1) != l.length ? "" : "");
+	            }
+	            return  t.split("").reverse().join("") + "." + r;
+	        }
+		  }
+		},
+	    methods:{
+	    	getEveryInOut(){
+	    		for(var i=0;i<this.dayData.length;i++){
+	    			var sumMoneyIn=0;
+	    			var sumMoneyOut=0;
+	    			for(var j=0;j<this.dayData[i].dayDetail.length;j++){
+	    				if(this.dayData[i].dayDetail[j].type){
+	    					sumMoneyIn += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    					this.indexSumMoneyIn += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    				}else{
+	    					sumMoneyOut += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    					this.indexSumMoneyOut += parseInt(this.dayData[i].dayDetail[j].money*100)/100;
+	    				}
+	    			}
+	    			this.dayData[i].sumMoneyIn = sumMoneyIn;
+	    			this.dayData[i].sumMoneyOut = sumMoneyOut;
+	    		}
+	    	}
+	    },
+	    created(){
+	    	if(localStorage.getItem('dayData')){
+	    		this.dayData = JSON.parse(localStorage.getItem('dayData'));
+	    	}
+	    	this.getEveryInOut()
+	    },
+	    mounted(){
+	    	var height = document.documentElement.clientHeight;
+	    	var topHeight = document.getElementById('topBox').clientHeight;
+	    	var isTrue = true;
+	    	console.log(topHeight)
+	    	this.$refs.listBox.style.height = height - topHeight +'px'
+	    }
+	})
+</script>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<title>首页</title>
+	<script src="js/vue.js"></script>
+</head>
+<link rel="stylesheet" type="text/css" href="css/public.css">
+<style type="text/css">
+	body,html{
+		height: 100%;
+	}
+	img{
+		display: block;
+		width: 100%;
+	}
+	#appData{
+		overflow: hidden;
+		width: 100%;
+	}
+</style>
+<body>
+	<div id="appData">
+		<img src="imgs/start.png" alt="" class="imgs">
+	</div>
+</body>
+<script>
+	function init(){
+	    var width = document.documentElement.clientWidth; //获取设备的宽度
+
+	    var height = document.documentElement.clientHeight;
+
+	    document.getElementById('appData').style.height = height +'px'
+
+	    console.log(width)
+	    //动态的为根元素设置字体的大小
+	    document.documentElement.style.fontSize = 32 * (width/320)*0.5 + 'px';
+	    document.getElementsByTagName('body')[0].style.fontSize= 16 + 'px';
+
+	    const ua = navigator.userAgent.toLowerCase();
+	      if (/iphone|ipad|ipod/.test(ua) || /android/.test(ua)) {
+	    document.documentElement.style.fontSize = 32 * (width/320) + 'px';
+	        document.getElementsByTagName('body')[0].style.background= '#FFF';
+	        //document.getElementsByTagName('body')[0].style.fontFamily= '微软雅黑';
+	    }
+	}
+	init();
+	window.addEventListener('resize', init)
+
+</script>
+<script type="text/javascript">
+	var app4 = new Vue({
+	    el: '#appData',
+	    data: {
+	    	
+
+	    },
+	    methods:{
+	    	
+	    },
+	    created(){
+			setTimeout(function(){
+				window.location.href = 'indexDoor.html'
+			},2500)
+	    },
+		mounted(){
+			
+			
+		}
+	})
+</script>
+</html>

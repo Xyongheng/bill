@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<title>信息</title>
+	<script src="js/vue.js"></script>
+</head>
+<link rel="stylesheet" type="text/css" href="css/public.css">
+<style type="text/css">
+	#appData .null{
+		padding-top: 2.4rem;
+		text-align: center;
+	}
+	.imgs{
+		height: 1.6rem;
+		width: 1.6rem;
+	}
+	p{
+		color: #A0A0A0;
+		font-size: 	0.426667rem;
+		line-height: 0.586667rem;
+		padding-top: 0.8rem;
+		font-family: PingFangSC-Light;
+	}
+	.top{
+		height: 1.733333rem;
+		background:#fff;
+		font-size: 0.48rem;
+		line-height: 0.666667rem;
+		color: #4C4C4C;
+		font-family: PingFangSC-Regular;
+		text-align: center;	
+		position: relative;
+		padding-top: 0.826667rem;
+	}
+	.top .leftBox{
+		position: absolute;
+		bottom: 0.3rem;
+		left: 0.48rem;
+		height: 0.8rem;
+		width: 0.8rem;
+		padding-top: 0.32rem;
+		
+	}
+	.top .toleft{
+		height: 0.453333rem;
+		width: 0.24rem;
+		background: url(imgs/toleft2.png) no-repeat;
+		background-size: 100% 100%;
+	}
+
+</style>
+<body>
+	<div id="appData">
+		<div class="top"><div @click="toLeft" class="leftBox"><div  class="toleft"></div></div>消息</div>
+		<div class="null">
+			<img src="imgs/message.png" alt="" class="imgs">
+			<p>暂无消息</p>
+		</div>
+	</div>
+</body>
+<script>
+	function init(){
+	    var width = document.documentElement.clientWidth; //获取设备的宽度
+	    //动态的为根元素设置字体的大小
+	    document.documentElement.style.fontSize = 32 * (width/320)*0.5 + 'px';
+	    document.getElementsByTagName('body')[0].style.fontSize= 16 + 'px';
+
+	    const ua = navigator.userAgent.toLowerCase();
+	      if (/iphone|ipad|ipod/.test(ua) || /android/.test(ua)) {
+	    document.documentElement.style.fontSize = 32 * (width/320) + 'px';
+	        document.getElementsByTagName('body')[0].style.background= '#F8F8F8';
+	        //document.getElementsByTagName('body')[0].style.fontFamily= '微软雅黑';
+	    }
+	}
+	init();
+	window.addEventListener('resize', init)
+
+</script>
+<script type="text/javascript">
+	var app4 = new Vue({
+	    el: '#appData',
+	    data: {
+
+
+	    },
+	    
+	    methods:{
+	    	toLeft(){
+		  		window.location.href='indexDoor.html';
+		  	},
+	    },
+	    created(){
+	    	
+	    }
+	})
+</script>
+</html>

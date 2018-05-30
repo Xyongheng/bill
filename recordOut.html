@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no" />
+	<title>支出</title>
+	<script src="js/vue.js"></script>
+</head>
+<link rel="stylesheet" type="text/css" href="css/public.css">
+<style type="text/css">
+	#recordOut{
+		font-family: PingFangSC-Regular;
+		font-size: 0.373333rem;
+	}
+	.entryBox{
+		height: 2.666667rem;
+		background: #F8F8F8;
+	}
+	.entry{
+		height: 2.133333rem;
+		background: #fff;
+		margin-bottom: 0.533333rem;
+	}
+	.entry .info img{
+		height: 1.066667rem;
+		width: 1.066667rem;
+		margin: 0.506667rem 0.266667rem 0 0.533333rem;
+
+	}
+	.entry .info .typeName{
+		padding-top: 0.853333rem;
+		font-size: 0.426667rem;
+		line-height: 0.426667rem;
+		color: #4C4C4C;
+	}
+	.entry .moneyNum{
+		text-align: right;
+		width: 5rem;
+		font-size: 0.8rem;
+		line-height: 0.8rem;
+		color: #A0A0A0;
+		padding-top: 0.64rem;
+		padding-right: 0.533333rem;
+	}
+	.entry .colorInput{
+		color: #4C4C4C;
+	}
+	.classList{background: #fff;}
+	.classList .list{
+		height: 2.24rem;
+		width: 20%;
+		padding-top: 0.533333rem;
+	}
+	.classList .list .imgs{
+		height: 1.066667rem;
+		width: 1.066667rem;
+		display: block;
+		margin: 0 auto 0.266667rem;
+	}
+	.classList .list .text{
+		font-size: 0.373333rem;
+		line-height: 0.373333rem;
+		color: #A0A0A0;
+		text-align: center;
+	}
+	.classList .activeList .text{
+		color: #51C566;
+	}
+	.layer{
+		position: fixed;
+		width: 100%;
+		height: 5.226667rem;
+		bottom: 0;
+		left: 0;
+		background: #fff;
+	}
+	.layer .keyboard{height: 100%;border-top: 1px solid #E9E9E9;}
+	.layer .leftNum{
+		width: 7.52rem;
+		line-height: 1.306667rem;
+		text-align: center;
+	}
+	.layer .leftNum .numBox .num{
+		width: 2.506667rem;
+		height: 1.333333rem;
+		border-right: 1px solid #E9E9E9;
+		border-bottom: 1px solid #E9E9E9;
+		color: #4C4C4C;
+	}
+	.layer .leftNum .dian{
+		height: 1.333333rem;
+		width: 2.506667rem;
+		border-right: 1px solid #E9E9E9;
+	}
+	.layer .leftNum .shi{
+		height: 1.333333rem;
+		width: 5.013333rem;
+		border-right: 1px solid #E9E9E9;
+	}
+	.layer .funKey{
+		width: 2.48rem;
+	}
+	.layer .funKey .del{
+		height: 2.64rem;
+		padding: 1.066667rem 0 0 0.88rem;
+	}
+	.layer .funKey .del img{
+		height: 0.56rem;
+		width: 0.853333rem;
+		display: block;
+	}
+	.layer .funKey .ok{
+		height: 2.64rem;
+		background: #008BFF;
+		color: #fff;
+		font-size: 0.48rem;
+		line-height: 2.64rem;
+		text-align: center;
+	}
+	[v-cloak] {
+	  	display: none;
+	}
+</style>
+<body>
+	<div v-cloak id="recordOut">
+		<div class="conBox">
+			<div :class="{rightContents:activeBtn[1]}" class="contents leftContents">
+				<div class="entryBox">
+					<div class="entry">
+						<div class="info fl clear">
+							<img class="fl" :src="activeMoneyOut.actImgSrc" alt="">
+							<div v-cloak class="typeName fl">{{activeMoneyOut.typeName}}支出</div>
+						</div>
+						<div @click="setMoney" :class="{colorInput:showLayer}" ref="inputOut" class="moneyNum fr" type="text"  readonly="readonly">{{moneyOutValue}}</div>
+					</div>
+				</div>
+				<div class="classList clear">
+					<div @click="chooseOut(index)" v-for="(item,index) in classData.moneyOut" :class="{activeList:item.isActive}" class="list fl">
+						<img class="imgs" :src="item.isAct ? item.actImgSrc:item.imgSrc" alt="">
+						<div class="text">{{item.typeName}}</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div v-if="showLayer" class="layer">
+			<div class="keyboard clear">
+				<div class="leftNum fl">
+					<div class="numBox clear">
+						<div @click="cliNum(item)" v-for="(item,index) in numList" v-if="index < 9" class="num fl">{{item}}</div>
+					</div>
+					<div class="numBottom">
+						<div @click="cliNum(numList[9])" class="dian fl">{{numList[9]}}</div>
+						<div @click="cliNum(numList[10])" class="shi fl">{{numList[10]}}</div>
+					</div>
+				</div>
+				<div class="funKey fl clear">
+					<div @click="delNum" class="del">
+						<img src="imgs/del.png" alt="">
+					</div>
+					<div @click="saveData" class="ok">确定</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script>
+	function init(){
+	    var width = document.documentElement.clientWidth; //获取设备的宽度
+	    //动态的为根元素设置字体的大小
+	    document.documentElement.style.fontSize = 32 * (width/320)*0.5 + 'px';
+	    document.getElementsByTagName('body')[0].style.fontSize= 16 + 'px';
+
+	    const ua = navigator.userAgent.toLowerCase();
+	    if (/iphone|ipad|ipod/.test(ua) || /android/.test(ua)) {
+	    document.documentElement.style.fontSize = 32 * (width/320) + 'px';
+	        document.getElementsByTagName('body')[0].style.background= '#fff';
+	        //document.getElementsByTagName('body')[0].style.fontFamily= '微软雅黑';
+	    }
+	}
+	init();
+	window.addEventListener('resize', init)
+
+</script>
+<script type="text/javascript">
+	var app4 = new Vue({
+	  el: '#recordOut',
+	  data: {
+	  	showLayer:false,
+	  	moneyOutValue:'0.00',
+	  	numList:['1','2','3','4','5','6','7','8','9','.','0'],
+	  	activeBtn:[1,0],
+	  	classList:[
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:1,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		},
+	  		{
+	  			imgSrc:'imgs/income/1_2.png',
+	  			actImgSrc:'imgs/income/1_1.png',
+	  			isActive:0,
+	  			typeName:'一般'
+	  		}
+	  	],
+	  	activeMoneyOut:{},
+	  	classData:{
+			"moneyOut":[
+				{
+					"imgSrc":"imgs/expenditure/1_2.png",
+					"actImgSrc":"imgs/expenditure/1_1.png",
+					"isAct":1,
+					"typeName":"一般",
+					"ty":1,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/2_2.png",
+					"actImgSrc":"imgs/expenditure/2_1.png",
+					"isAct":0,
+					"typeName":"餐饮",
+					"ty":2,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/3_2.png",
+					"actImgSrc":"imgs/expenditure/3_1.png",
+					"isAct":0,
+					"typeName":"购物",
+					"ty":3,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/4_2.png",
+					"actImgSrc":"imgs/expenditure/4_1.png",
+					"isAct":0,
+					"typeName":"服饰",
+					"ty":4,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/5_2.png",
+					"actImgSrc":"imgs/expenditure/5_1.png",
+					"isAct":0,
+					"typeName":"交通",
+					"ty":5,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/6_2.png",
+					"actImgSrc":"imgs/expenditure/6_1.png",
+					"isAct":0,
+					"typeName":"娱乐",
+					"ty":6,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/7_2.png",
+					"actImgSrc":"imgs/expenditure/7_1.png",
+					"isAct":0,
+					"typeName":"社交",
+					"ty":7,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/8_2.png",
+					"actImgSrc":"imgs/expenditure/8_1.png",
+					"isAct":0,
+					"typeName":"通讯",
+					"ty":8,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/9_2.png",
+					"actImgSrc":"imgs/expenditure/9_1.png",
+					"isAct":0,
+					"typeName":"美容",
+					"ty":9,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/10_2.png",
+					"actImgSrc":"imgs/expenditure/10_1.png",
+					"isAct":0,
+					"typeName":"旅行",
+					"ty":10,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/11_2.png",
+					"actImgSrc":"imgs/expenditure/11_1.png",
+					"isAct":0,
+					"typeName":"数码",
+					"ty":11,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/12_2.png",
+					"actImgSrc":"imgs/expenditure/12_1.png",
+					"isAct":0,
+					"typeName":"学习",
+					"ty":12,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/13_2.png",
+					"actImgSrc":"imgs/expenditure/13_1.png",
+					"isAct":0,
+					"typeName":"医疗",
+					"ty":13,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/14_2.png",
+					"actImgSrc":"imgs/expenditure/14_1.png",
+					"isAct":0,
+					"typeName":"礼金",
+					"ty":14,
+					"type":0
+				},
+				{
+					"imgSrc":"imgs/expenditure/15_2.png",
+					"actImgSrc":"imgs/expenditure/15_1.png",
+					"isAct":0,
+					"typeName":"还钱",
+					"ty":15,
+					"type":0
+				}
+			]
+		},
+		dayData:[],
+		monthData:[],
+		setMonthData:{},
+		weekNameList:['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+	  },
+	  methods:{
+	  	saveData(){
+	  		if(this.moneyOutValue[this.moneyOutValue-1] == '.'){
+	  			this.moneyOutValue.substr(0,this.moneyOutValue.length -1)
+	  		}
+	  		this.showLayer = false;
+	  		this.setMonthData = {
+	  			typeName:this.activeMoneyOut.typeName,
+	  			type:0,
+	  			actImgSrc:this.activeMoneyOut.actImgSrc,
+	  			money:parseInt(this.moneyOutValue*100)/100,
+	  			ty:this.activeMoneyOut.ty
+	  		}
+
+	  		this.saveMonthData();
+	  		this.saveDayData();
+	  		this.moneyOutValue ="0.00";
+	  		window.parent.location.href='indexDoor.html';
+
+	  	},
+	  	saveMonthData(){
+	  		var myDate = new Date();
+	  		var year = myDate.getFullYear();
+	  		var month = myDate.getMonth() + 1;
+	  		var hasYear = false;
+	  		var hasMonth = false;
+	  		var sumLength = this.monthData.length - 1;//最后一个的下标
+			year = myDate.getFullYear();
+
+			for(var i=0;i<this.monthData.length;i++){
+				if(this.monthData[i].year == year){
+					hasYear = true;
+				}
+			}
+
+			if(!hasYear){//如果记录里没有当年添加
+				this.monthData.push({//添加 年
+					year:year,
+					monthDetail:[],
+				})
+				this.monthData[this.monthData.length -1].monthDetail.push({ //添加月
+					month:month,
+					budget:5000,
+					everyDetail:[]
+				})
+				this.monthData[this.monthData.length -1].monthDetail[0].everyDetail.push(this.setMonthData) //插入数据
+					
+				localStorage.setItem("monthData",JSON.stringify(this.monthData));
+				return
+			}
+
+			for(var i=0;i<this.monthData[sumLength].monthDetail.length;i++){
+				if(this.monthData[sumLength].monthDetail[i].month == month){
+					hasMonth = true;
+				}
+			}
+
+			if(!hasMonth){//如果记录里没有当月添加
+				this.monthData[sumLength].monthDetail.unshift({ //添加月
+					month:month,
+					budget:5000,
+					everyDetail:[
+						this.setMonthData
+					]
+				})
+			}else{
+				this.monthData[0].monthDetail[0].everyDetail.unshift(this.setMonthData)
+			}
+			localStorage.setItem("monthData",JSON.stringify(this.monthData));
+	  	},
+	  	saveDayData(){
+	  		var hasToday = false;
+
+	  		var myDate = new Date();
+	  		var week = myDate.getDay(); 
+	  		week = this.weekNameList[week];
+	  		var year = myDate.getFullYear();
+	  		var month = myDate.getMonth()+1;
+	  		var day = myDate.getDate();
+	  		var dateTime = year+'.'+(month<10 ? '0'+month:month)+'.'+(day<10 ? '0'+day:day)
+	  		if(this.dayData.length == 0){
+	  			this.dayData.push({
+  					dateTime: dateTime,
+  					week:week,
+  					dayDetail:[this.setMonthData]
+  				})
+	  			localStorage.setItem("dayData",JSON.stringify(this.dayData));
+	  			return;
+	  		}
+	  		for(var i=0;i<this.dayData.length;i++){
+	  			if(this.dayData[i].dateTime === dateTime){
+
+	  				this.dayData[i].dayDetail.unshift(this.setMonthData);
+	  				localStorage.setItem("dayData",JSON.stringify(this.dayData));
+	  				hasToday = true;
+	  			}
+	  		}
+	  		if(!hasToday){
+	  			this.dayData.unshift({
+	  				dateTime: dateTime,
+	  				week:week,
+	  				dayDetail:[this.setMonthData]
+	  			})
+	  			localStorage.setItem("dayData",JSON.stringify(this.dayData));
+	  		}
+	  	},
+	  	delNum(){
+	  		if(this.moneyOutValue.length > 0){
+	  	 		this.moneyOutValue = this.moneyOutValue.substr(0,this.moneyOutValue.length -1)
+	  		}
+	  	},
+	  	cliNum(num){
+	  		if(this.moneyOutValue == '0.00'){
+	  			this.moneyOutValue = '';
+	  		}
+	  		if(this.moneyOutValue.length == 0 && num == '.'){
+	  			return;
+	  		}
+	  		if(this.moneyOutValue.length == 0 && num =='0'){
+	  			num = '0.'
+	  		}
+	  		if(num == '.' && this.moneyOutValue.indexOf('.') >=0){
+	  			return;
+	  		}
+	  		if(this.moneyOutValue.indexOf('.') > 0){
+		  		if(this.moneyOutValue.length - this.moneyOutValue.indexOf('.') <=2){
+		  			if(this.moneyOutValue.indexOf('.') > 7){
+		  				return;
+		  			}
+		  			this.moneyOutValue += num;
+		  		}
+	  		}else{
+	  			if(this.moneyOutValue.length <8){
+		  			this.moneyOutValue += num;
+	  				
+	  			}
+	  		}
+	  	},
+	  	setMoney(){
+	  		this.showLayer = true;
+	  		this.keepData();
+	  		// this.moneyOutValue = '';
+	  	},
+	  	changeBtn(index){
+	  		this.$set(this.activeBtn,0,0);
+	  		this.$set(this.activeBtn,1,0);
+	  		this.$set(this.activeBtn,index,1);
+	  		var optionss=localStorage.getItem("classData");   
+	  	},
+	  	chooseOut(index){
+	  		var forData = null;
+	  		// this.moneyOutValue = '0.00';
+	  		// this.$refs.inputIn.focus()
+	  		for(var i=0;i<this.classData.moneyOut.length;i++){
+	  			forData = this.classData.moneyOut[i];
+	  			forData.isAct = 0
+	  			this.$set(this.classData.moneyOut,i,forData)
+	  		}
+	  		var actData = this.classData.moneyOut[index];
+	  		actData.isAct = 1
+	  		this.$set(this.classData.moneyOut,index,actData)
+
+	  		this.activeMoneyOut = this.classData.moneyOut[index];
+	  	},
+	  	keepData(){
+	  		if(localStorage.getItem('monthData')){
+	  			this.monthData = JSON.parse(localStorage.getItem('monthData'));
+	  		}
+
+	  		if(localStorage.getItem('dayData')){
+	  			this.dayData = JSON.parse(localStorage.getItem('dayData'));
+	  		}
+	  	}
+	  },
+	  created(){
+	  	this.activeMoneyOut = this.classData.moneyOut[0];
+	  	this.keepData();
+	  }
+	})
+</script>
+</html>
